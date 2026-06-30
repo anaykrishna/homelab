@@ -1,0 +1,3 @@
+# Secrets — never commit real credentials
+config/.env
+*.secret
