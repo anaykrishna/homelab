@@ -1,0 +1,11 @@
+# Server path: /etc/systemd/system/immich-autoshutdown.timer
+[Unit]
+Description=Run the Immich auto-shutdown guard every 10 minutes
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=10min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

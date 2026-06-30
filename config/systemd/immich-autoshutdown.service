@@ -1,0 +1,8 @@
+# Server path: /etc/systemd/system/immich-autoshutdown.service
+[Unit]
+Description=Immich auto-shutdown guard (powers off when idle past backup window)
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/immich-autoshutdown.sh
