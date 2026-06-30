@@ -1,8 +1,10 @@
 # Validates the rendered compose has the four services and required customizations.
-cp ../config/.env.example ../config/.env.validate
-cp ../config/.env.example ../config/.env
-RENDER=$(docker compose --env-file ../config/.env.validate -f ../config/docker-compose.yml config 2>/dev/null)
-rm -f ../config/.env.validate ../config/.env
+_compose_tmp=$(mktemp -d)
+trap 'rm -rf "$_compose_tmp"' RETURN
+cp ../config/.env.example "$_compose_tmp/.env.validate"
+cp ../config/.env.example "$_compose_tmp/.env"
+RENDER=$(docker compose --project-directory "$_compose_tmp" --env-file "$_compose_tmp/.env.validate" -f ../config/docker-compose.yml config 2>/dev/null)
+rm -f "$_compose_tmp/.env.validate"
 
 has() { grep -q "$1" <<<"$RENDER" && echo yes || echo no; }
 

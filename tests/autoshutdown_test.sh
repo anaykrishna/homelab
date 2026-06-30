@@ -74,11 +74,4 @@ out2=$(DRY_RUN=0 MIN_UPTIME=0 \
 assert_eq "$(grep -c 'set-wake-called' "$WAKE_LOG")" "1" "non-DRY_RUN arms wake"
 assert_eq "$(grep -c 'poweroff' "$SYSTEMCTL_LOG")" "1" "non-DRY_RUN calls systemctl poweroff"
 
-# Verify ordering: set-wake must appear before systemctl poweroff in combined log
-combined_log="$_tmp/combined.log"
-: >"$combined_log"
-# Use modification order — but since they are separate files, reconstruct order from script output
-# which logs "powering off" after set-wake runs
-wake_line=$(grep -n 'set-wake-called' "$WAKE_LOG" | head -1 | cut -d: -f1)
-# set-wake-called presence + "powering off" line in output confirms ordering
 assert_eq "$(grep -c 'powering off' <<<"$out2")" "1" "non-DRY_RUN logs powering off after set-wake"
