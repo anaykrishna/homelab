@@ -1,0 +1,18 @@
+# Server path: /etc/systemd/system/immich-wake.service
+# Arms the next RTC wake alarm at boot and again at shutdown, so the alarm is always
+# set regardless of how the machine powered off.
+[Unit]
+Description=Arm RTC wake alarm for next Immich backup window
+DefaultDependencies=no
+After=sysinit.target
+Before=shutdown.target
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/immich-set-wake.sh
+ExecStop=/usr/local/bin/immich-set-wake.sh
+
+[Install]
+WantedBy=multi-user.target
