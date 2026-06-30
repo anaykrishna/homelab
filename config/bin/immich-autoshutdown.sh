@@ -6,7 +6,6 @@
 set -euo pipefail
 
 MIN_UPTIME="${MIN_UPTIME:-2700}"          # 45 min
-IDLE_THRESHOLD_MS="${IDLE_THRESHOLD_MS:-900000}"  # 15 min of no input = "not active"
 LIB="${LIB:-/usr/local/lib/immich/shutdown-decision.sh}"
 SET_WAKE="${SET_WAKE:-/usr/local/bin/immich-set-wake.sh}"
 
@@ -22,6 +21,7 @@ uptime_secs=$(awk '{print int($1)}' /proc/uptime)
 # loginctl IdleSinceHint is unreliable across DEs, so use the smallest idle across
 # active graphical sessions via the session's IdleHint, falling back to "active if any
 # active graphical session exists".
+# Fail-safe: if loginctl is absent, user_active stays 0 (biases toward shutdown — acceptable for a server).
 user_active=0
 if command -v loginctl >/dev/null 2>&1; then
   while read -r sid; do
