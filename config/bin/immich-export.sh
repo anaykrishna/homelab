@@ -19,6 +19,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   # shellcheck source=/dev/null
   source "$ENV_FILE"
   : "${UPLOAD_LOCATION:?UPLOAD_LOCATION not set in $ENV_FILE}"
+  : "${DB_USERNAME:?DB_USERNAME not set in $ENV_FILE}"
 
   OUT="$DEST/immich-backup"
   mkdir -p "$OUT"
