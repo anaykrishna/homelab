@@ -1,4 +1,4 @@
-# 03 — Static LAN IP + Tailscale (run on the Ubuntu server)
+# 03 — Static LAN IP + Tailscale (run on the Debian 13 server)
 
 1. Reserve a static LAN IP: in your router's DHCP settings, bind the server's MAC to a
    fixed address (e.g. 192.168.1.50). Confirm with `ip a`.

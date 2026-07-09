@@ -1,4 +1,4 @@
-# 02 — BIOS RTC Wake + systemd wake service (run on the Ubuntu server)
+# 02 — BIOS RTC Wake + systemd wake service (run on the Debian 13 server)
 
 1. Reboot into BIOS/UEFI. Find Power Management -> enable
    "Wake on RTC Alarm" / "RTC Alarm Power On" / "Auto Power On". Save & exit.

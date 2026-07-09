@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Produce all config files, scripts, and setup checklists to run a self-hosted Immich photo-backup server on an old all-in-one Ubuntu PC that auto-wakes at 9 PM for backups and auto-shuts-down when idle.
+**Goal:** Produce all config files, scripts, and setup checklists to run a self-hosted Immich photo-backup server on an old all-in-one Debian 13 PC that auto-wakes at 9 PM for backups and auto-shuts-down when idle.
 
 **Architecture:** Immich runs as a 4-container Docker Compose stack. A thin host layer of bash scripts + systemd units (1) arms the hardware RTC alarm to power the PC on at 21:00 and (2) shuts it down only when nobody is at the desktop and no uploads are running. A manual export script mirrors the archive to a USB drive. Tailscale provides free remote viewing.
 
@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- **Authoring vs. server split:** All files are authored on this Debian 12 machine under `~/homelab-immich/`. Every server-bound file begins with a header comment stating its exact intended path on the Ubuntu server. Server-only actions (BIOS, systemctl, docker) are delivered as checklists for the user to run — never executed from here.
+- **Authoring vs. server split:** All files are authored on this Debian 12 machine under `~/homelab-immich/`. Every server-bound file begins with a header comment stating its exact intended path on the Debian 13 server. Server-only actions (BIOS, systemctl, docker) are delivered as checklists for the user to run — never executed from here.
 - **Server target paths:** Immich stack → `/opt/immich/`; scripts → `/usr/local/bin/`; shared lib → `/usr/local/lib/immich/`; systemd units → `/etc/systemd/system/`.
 - **Photo storage:** `UPLOAD_LOCATION=/photos` on the server's single internal drive. Originals stored as plain files.
 - **Wake time:** 21:00 (9:00 PM) local. **Min uptime before auto-shutdown is permitted:** 2700 s (45 min).
@@ -107,7 +107,7 @@ Create `README.md`:
 ```markdown
 # Homelab Immich Photo-Backup Server
 
-Config + scripts for a self-hosted Immich server on an old all-in-one Ubuntu PC
+Config + scripts for a self-hosted Immich server on an old all-in-one Debian 13 PC
 that auto-wakes at 21:00 for backups and auto-shuts-down when idle.
 
 - Design spec: `docs/superpowers/specs/2026-06-30-immich-homelab-photo-backup-design.md`
@@ -116,7 +116,7 @@ that auto-wakes at 21:00 for backups and auto-shuts-down when idle.
 - Setup checklists (run on the server): `docs/setup/`.
 - Run logic tests: `bash tests/run.sh`
 
-Files are authored here, then copied to the Ubuntu server. See `docs/setup/`.
+Files are authored here, then copied to the Debian 13 server. See `docs/setup/`.
 ```
 
 - [ ] **Step 7: Commit**
@@ -730,7 +730,7 @@ git commit -m "feat: add manual external-drive export script with tests"
 Create `docs/setup/01-install-and-deploy.md`:
 
 ```markdown
-# 01 — Install Docker & Deploy Immich (run on the Ubuntu server)
+# 01 — Install Docker & Deploy Immich (run on the Debian 13 server)
 
 1. Install Docker Engine + Compose plugin:
    `curl -fsSL https://get.docker.com | sh` then `sudo usermod -aG docker $USER` and re-login.
@@ -751,7 +751,7 @@ Create `docs/setup/01-install-and-deploy.md`:
 Create `docs/setup/02-bios-rtc-wake.md`:
 
 ```markdown
-# 02 — BIOS RTC Wake + systemd wake service (run on the Ubuntu server)
+# 02 — BIOS RTC Wake + systemd wake service (run on the Debian 13 server)
 
 1. Reboot into BIOS/UEFI. Find Power Management -> enable
    "Wake on RTC Alarm" / "RTC Alarm Power On" / "Auto Power On". Save & exit.
@@ -769,7 +769,7 @@ Create `docs/setup/02-bios-rtc-wake.md`:
 Create `docs/setup/03-static-ip-and-tailscale.md`:
 
 ```markdown
-# 03 — Static LAN IP + Tailscale (run on the Ubuntu server)
+# 03 — Static LAN IP + Tailscale (run on the Debian 13 server)
 
 1. Reserve a static LAN IP: in your router's DHCP settings, bind the server's MAC to a
    fixed address (e.g. 192.168.1.50). Confirm with `ip a`.

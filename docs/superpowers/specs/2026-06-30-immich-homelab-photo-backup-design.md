@@ -40,12 +40,12 @@ search indexing), and then powers itself back off when idle.
 ## 2. Environment
 
 - **Server:** old all-in-one PC, Intel Core i3 M 380 (2 cores / 4 threads, ~2.53 GHz,
-  no AVX), **8 GB RAM**, single internal drive, running **Ubuntu with GUI** (still
+  no AVX), **8 GB RAM**, single internal drive, running **Debian 13 with GUI** (still
   occasionally used as a normal desktop).
 - **Clients:** 2–3 Android phones.
 - **Authoring machine:** a separate Debian 12 box (this is where config files are
   written, then transferred to the server). Every config file in this repo carries a
-  header comment stating its intended path/name on the Ubuntu server.
+  header comment stating its intended path/name on the Debian 13 server.
 
 ---
 
@@ -66,7 +66,7 @@ Rejected alternatives:
 
 ## 4. Architecture
 
-Two layers on the one Ubuntu PC, plus an access layer.
+Two layers on the one Debian 13 PC, plus an access layer.
 
 ### Layer 1 — Immich application stack (Docker Compose)
 
@@ -218,7 +218,7 @@ RTC alarm fires (21:00) -> PC powers on -> Docker + Immich auto-start
 
 ## 7. Testing plan
 
-(Commands provided for the Ubuntu server.)
+(Commands provided for the Debian 13 server.)
 
 - **Wake:** arm RTC alarm ~2 min out, power off, confirm self power-on.
 - **Auto-shutdown guard:** dry-run under simulated states — (a) active desktop session
