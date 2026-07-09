@@ -31,8 +31,9 @@ echo "ss $*" >>"$SS_LOG"
 EOF
 chmod +x "$_tmp/bin/ss"
 
-# Stub lib that forces a deterministic "shutdown" decision
+# Stub lib that forces a deterministic "shutdown" decision (always in-window, always shutdown)
 cat >"$_tmp/shutdown-decision.sh" <<'EOF'
+in_shutdown_window() { echo 1; }
 should_shutdown() { echo "shutdown idle_and_past_window"; }
 EOF
 

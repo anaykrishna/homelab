@@ -6,6 +6,8 @@
 set -euo pipefail
 
 MIN_UPTIME="${MIN_UPTIME:-2700}"          # 45 min
+SHUTDOWN_WINDOW_START="${SHUTDOWN_WINDOW_START:-22}"  # only auto-power-off at night, so
+SHUTDOWN_WINDOW_END="${SHUTDOWN_WINDOW_END:-7}"       # this shared PC stays up for daytime use
 LIB="${LIB:-/usr/local/lib/immich/shutdown-decision.sh}"
 SET_WAKE="${SET_WAKE:-/usr/local/bin/immich-set-wake.sh}"
 
@@ -44,8 +46,12 @@ if command -v ss >/dev/null 2>&1; then
   (( conns > 0 )) && uploads_active=1
 fi
 
-decision="$(should_shutdown "$uptime_secs" "$MIN_UPTIME" "$user_active" "$uploads_active")"
-log "uptime=${uptime_secs}s user_active=${user_active} uploads_active=${uploads_active} -> ${decision}"
+# --- night-only gate: only auto-shutdown during the configured overnight window ---
+hour=$(date +%-H)
+in_window="$(in_shutdown_window "$hour" "$SHUTDOWN_WINDOW_START" "$SHUTDOWN_WINDOW_END")"
+
+decision="$(should_shutdown "$uptime_secs" "$MIN_UPTIME" "$user_active" "$uploads_active" "$in_window")"
+log "uptime=${uptime_secs}s hour=${hour} user_active=${user_active} uploads_active=${uploads_active} in_window=${in_window} -> ${decision}"
 
 if [[ "${decision%% *}" == "shutdown" ]]; then
   if [[ "${DRY_RUN:-0}" == "1" ]]; then

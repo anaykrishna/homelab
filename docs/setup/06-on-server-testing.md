@@ -6,12 +6,18 @@ WAKE
 - Expect the PC to power on by itself ~2 min later.
 
 AUTO-SHUTDOWN GUARD (no real poweroff)
-- Idle + past window -> intends to power off:
-  `sudo DRY_RUN=1 MIN_UPTIME=0 /usr/local/bin/immich-autoshutdown.sh`
+- This is a shared daytime-use PC, so the guard only powers off inside the night window
+  (default 22:00–06:59, set via SHUTDOWN_WINDOW_START / SHUTDOWN_WINDOW_END). Force the
+  window in tests so the result doesn't depend on the wall clock.
+- Idle + in window -> intends to power off:
+  `sudo DRY_RUN=1 MIN_UPTIME=0 SHUTDOWN_WINDOW_START=0 SHUTDOWN_WINDOW_END=24 /usr/local/bin/immich-autoshutdown.sh`
   Expect a log line "DRY_RUN: would arm next wake and power off now".
-- Active session blocks it: while logged into the desktop, run the same command;
+- Outside the window it stays up: force an empty window and expect it to stay:
+  `sudo DRY_RUN=1 MIN_UPTIME=0 SHUTDOWN_WINDOW_START=3 SHUTDOWN_WINDOW_END=3 /usr/local/bin/immich-autoshutdown.sh`
+  expect "in_window=0 ... stay outside_shutdown_window".
+- Active session blocks it: while logged into the desktop, run the first command;
   expect "user_active=1 ... stay user_active".
-- Active upload blocks it: start a phone upload, run the same command;
+- Active upload blocks it: start a phone upload, run the first command;
   expect "uploads_active=1 ... stay uploads_active".
 
 BACKUP
